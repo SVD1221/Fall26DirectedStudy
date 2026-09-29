@@ -4,7 +4,6 @@
 #include <vector>
 #include <cstdlib>
 #include <cmath>
-#include <thread>
 #include <chrono>
 
 using namespace std;
@@ -74,13 +73,12 @@ vector<int> createAdjustments(bool top, bool bottom, bool left, bool right, int 
     return xy_adjust;
 }
 
-void convolve2D(vector<int> *pConvolent, vector<int> data, vector<int> shape, vector<int> kernel, vector<int> k_shape,
-                        vector<int> y_window, vector<int> x_window, bool periodic = true)
+void convolve2D(vector<int> *pConvolent, vector<int> data, vector<int> shape, vector<int> kernel, vector<int> k_shape, bool periodic = true)
 {
     int radius = k_shape[0]/2;
     int k_center = k_shape[0]*k_shape[1]/2; 
-    for (int x = x_window[0]; x <= x_window[1]; x++){
-        for (int y = y_window[0]; y <= y_window[1]; y++){
+    for (int x = 0; x < shape[1]; x++){
+        for (int y = 0; y < shape[0]; y++){
             int sum = 0;
             int center = shape[1]*y + x;
             for (int r = 1; r < radius+1; r++){
@@ -241,16 +239,7 @@ class CASystem
             int size = shape[0]*shape[1];
             vector<int> convolent(size);
 
-            ////Two threads
-            vector<int> fullY = {0, shape[1] - 1};
-            vector<int> left = {0, shape[0]/2 - 1};
-            vector<int> right = {shape[0]/2, shape[0]-1};
-
-            thread t1(convolve2D, &convolent, state, shape, kernel, kernel_shape, left, fullY, true);
-            thread t2(convolve2D, &convolent, state, shape, kernel, kernel_shape, right, fullY, true);
-
-            t1.join();
-            t2.join();
+            convolve2D(&convolent, state, shape, kernel, kernel_shape, true);
 
             return convolent;
         }
