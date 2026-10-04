@@ -3,8 +3,11 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <cstdio>
 #include <cmath>
 #include <chrono>
+
+// TO USE MULTIPLE THREADS RUN: g++ -o 2d_ca 2d_ca.cpp -fopenmp
 
 using namespace std;
 
@@ -25,25 +28,6 @@ vector<int> createRandomVec(int min, int max, int size, int seed)
     }
 
     return rand_vec;
-}
-
-void printVec(vector<int> vec)
-{
-    for (int i = 0; i < vec.size(); i++) {
-        cout << vec[i] << " ";
-    }
-    cout << endl;
-}
-
-void printMatrix(vector<int> mat, vector<int> shape)
-{
-    for (int k = 0; k < shape[0]; k++) {
-        for (int j = 0; j < shape[1]; j++) {
-            cout << mat[k*shape[1] + j] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
 }
 
 void writeTo(ofstream *file, vector<int> *vec)
@@ -76,8 +60,11 @@ vector<int> createAdjustments(bool top, bool bottom, bool left, bool right, int 
 void convolve2D(vector<int> *pConvolent, vector<int> data, vector<int> shape, vector<int> kernel, vector<int> k_shape, bool periodic = true)
 {
     int radius = k_shape[0]/2;
-    int k_center = k_shape[0]*k_shape[1]/2; 
+    int k_center = k_shape[0]*k_shape[1]/2;
+
+    // pragma here produces similar results
     for (int x = 0; x < shape[1]; x++){
+        #pragma omp parallel for
         for (int y = 0; y < shape[0]; y++){
             int sum = 0;
             int center = shape[1]*y + x;
@@ -139,7 +126,10 @@ class CASystem
         {
             vector<int> next_state(shape[0]*shape[1], 0);
             vector<int> neighbors = countNeighbors(state);
+
+            // adding pragma here makes slower - too much overhead?
             for (int x = 0; x < shape[1]; x++){
+                // adding pragma here makes slower - too much overhead?
                 for (int y = 0; y < shape[0]; y++){
                     int pos = shape[1]*y + x;
 
@@ -296,14 +286,14 @@ int main()
     auto start = chrono::steady_clock::now();
 
     int iterations = 150;
-    vector<int> shape = {30, 30}; //{height, width}
+    vector<int> shape = {100, 100}; //{height, width}
     vector<int> initial_state = createRandomVec(0, 1, shape[0]*shape[1], 1);
     CASystem ca = CASystem(shape, GoL);
     // CASystem ca = CASystem(shape, ForestFire);
 
     //// Writes to file (shape \\newline data)
     ofstream file;
-    file.open("2dca_output.txt");
+    file.open("output_files/2dca_output.txt");
     file << shape[0] << " " << shape[1] << endl;
     vector<int> curr_state = initial_state;
 

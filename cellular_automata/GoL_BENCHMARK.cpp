@@ -98,7 +98,7 @@ int main() {
         }
     }
     std::ofstream file;
-    file.open("2dca_benchmark_output.txt");
+    file.open("output_files/2dca_benchmark_output.txt");
     file << HEIGHT << " " << WIDTH << std::endl;
     for (int i = 0; i < iterations; i++){
         writeTo(&file, &grid);
