@@ -3,7 +3,7 @@
 ## C++
 | File | Description|
 | --- | --- | 
-| `elementary_ca.cpp` | Compatible with all 256 rules of ECA. Generates a text file readable by `VisualizeECA.ipynb`. Capable of generating multiple rules at a time. |
+| `elementary_ca.cpp` | Compatible with all 256 rules of ECA. Generates a text file readable by `VisualizeECA.ipynb`. Capable of generating multiple rules at a time. Incorporates multi-threading with *openmp*. |
 | `2d_ca.cpp` | Generalized model for 2-dimensional CA. Generates a text file readable by `Visualize2DCA.ipynb`. Includes John Conway's Game of Life (tested against `GoL_BENCHMARK.cpp`), a forest fire model, and other custom animations. |
 | `GoL_BENCHMARK.cpp` | John Conway's Game of Life produced by *cppscripts.com* modified for periodic boundary conditions and file output. |
 
