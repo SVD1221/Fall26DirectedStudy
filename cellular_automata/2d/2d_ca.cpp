@@ -5,9 +5,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
-#include <chrono>
-
-// TO USE MULTIPLE THREADS RUN: g++ -o 2d_ca 2d_ca.cpp -fopenmp
 
 using namespace std;
 
@@ -62,9 +59,7 @@ void convolve2D(vector<int> *pConvolent, vector<int> data, vector<int> shape, ve
     int radius = k_shape[0]/2;
     int k_center = k_shape[0]*k_shape[1]/2;
 
-    // pragma here produces similar results
     for (int x = 0; x < shape[1]; x++){ //~max(shape)
-        #pragma omp parallel for
         for (int y = 0; y < shape[0]; y++){ // ~max(shape)
             int sum = 0;
             int center = shape[1]*y + x;
@@ -127,19 +122,14 @@ class CASystem
             vector<int> next_state(shape[0]*shape[1], 0);
             vector<int> neighbors = countNeighbors(state);
 
-            // adding pragma here doesn't improve performance
-            // #pragma omp parallel for
             for (int x = 0; x < shape[1]; x++){ //~max(shape)
-                // adding pragma here doesn't improve performance
-                // #pragma omp parallel for
                 for (int y = 0; y < shape[0]; y++){ //~max(shape)
                     int pos = shape[1]*y + x;
 
                     for (int s = 0; s < rule.stateRules.size(); s++){ // number of states
                         if (rule.ruleType[s] == 0){
-                            //something with randomness/looking
                             if (state[pos] == s){
-                                next_state[pos] = randomCheck(rule.stateRules[s], state, x, y);
+                                next_state[pos] = randomChoice(rule.stateRules[s], state, x, y);
                             }
                         }
                         else if (rule.ruleType[s] == 1){
@@ -153,7 +143,7 @@ class CASystem
             return next_state;
         }
 
-        int randomCheck(vector<float> state_space, vector<int> state, int x, int y)
+        int randomChoice(vector<float> state_space, vector<int> state, int x, int y)
         {
             int half = state_space.size()/2;
             int default_state;
@@ -246,6 +236,15 @@ const Rule GoL = {  {   {0, 0, 0, 1, 0, 0, 0, 0, 0},
                         1, 1, 1   },
                     3, 3};
 
+const Rule NeumannGoL = {   {   {0, 0, 0, 1, 0},
+                                {0, 0, 1, 0, 0} },
+                            {   1, 
+                                1   },
+                            {   0, 1, 0,
+                                1, 0, 1,
+                                0, 1, 0   },
+                            3, 3};
+
 const Rule Sparkle = {  {   {0, 0, 1, 0, 1, 0, 0, 0, 0}, 
                             {0, 0, 1, 0, 0, 0, 0, 0, 0} },
                         {   1,
@@ -284,18 +283,15 @@ const Rule ForestFire = {   {   {-1, 0.001, 0.00001, 0, 0.05, 0},
 
 int main()
 {
-    //// Start Clock
-    auto start = chrono::steady_clock::now();
-
-    int iterations = 150;
+    int iterations = 100;
     vector<int> shape = {100, 100}; //{height, width}
     vector<int> initial_state = createRandomVec(0, 1, shape[0]*shape[1], 1);
-    CASystem ca = CASystem(shape, GoL);
+    CASystem ca = CASystem(shape, NeumannGoL);
     // CASystem ca = CASystem(shape, ForestFire);
 
     //// Writes to file (shape \\newline data)
     ofstream file;
-    file.open("output_files/2dca_output.txt");
+    file.open("../output_files/2dca_output.txt");
     file << shape[0] << " " << shape[1] << endl;
     vector<int> curr_state = initial_state;
 
@@ -307,12 +303,6 @@ int main()
     writeTo(&file, &curr_state);
 
     file.close();
-
-    //// Stop Clock
-    auto end = chrono::steady_clock::now();
-    auto ms = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-
-    cout << "Program finished in " << ms << " ms\n";
 
     return 0;
 }
