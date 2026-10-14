@@ -236,8 +236,8 @@ const Rule GoL = {  {   {0, 0, 0, 1, 0, 0, 0, 0, 0},
                         1, 1, 1   },
                     3, 3};
 
-const Rule NeumannGoL = {   {   {0, 0, 0, 1, 0},
-                                {0, 0, 1, 0, 0} },
+const Rule NeumannGoL = {   {   {0, 0, 1, 0, 0},
+                                {0, 0, 1, 1, 0} },
                             {   1, 
                                 1   },
                             {   0, 1, 0,
@@ -284,15 +284,16 @@ const Rule ForestFire = {   {   {-1, 0.001, 0.00001, 0, 0.05, 0},
 int main()
 {
     int iterations = 100;
-    vector<int> shape = {100, 100}; //{height, width}
-    vector<int> initial_state = createRandomVec(0, 1, shape[0]*shape[1], 1);
-    CASystem ca = CASystem(shape, NeumannGoL);
-    // CASystem ca = CASystem(shape, ForestFire);
+    vector<int> grid_shape = {200, 200}; //{height, width}
+    vector<int> initial_state = createRandomVec(0, 1, grid_shape[0]*grid_shape[1], 1);
+    CASystem ca = CASystem(grid_shape, GoL);
+    // CASystem ca = CASystem(grid_shape, ForestFire);
 
-    //// Writes to file (shape \\newline data)
+    //// Writes to file (grid_shape \\newline data)
     ofstream file;
-    file.open("../output_files/2dca_output.txt");
-    file << shape[0] << " " << shape[1] << endl;
+    file.open("../output_files/2d/2dca_output.txt");
+    // file.open("../output_files/Game_of_Life/my_GoL_output.txt");
+    file << grid_shape[0] << " " << grid_shape[1] << endl;
     vector<int> curr_state = initial_state;
 
     for (int i = 0; i < iterations; i++){

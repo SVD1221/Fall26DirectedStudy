@@ -4,7 +4,6 @@
 | File | Description|
 | --- | --- | 
 | `2d_ca.cpp` | Generalized model for 2-dimensional CA. Generates a text file readable by `Visualize2DCA.ipynb`. Includes John Conway's Game of Life (tested against `GoL_BENCHMARK.cpp`), a forest fire model, and other custom animations. Incorporates multi-threading with *openmp*. |
-| `GoL_BENCHMARK.cpp` | John Conway's Game of Life produced by *cppscripts.com* modified for periodic boundary conditions and file output. |
 
 ## Jupyter
 | File | Description|
