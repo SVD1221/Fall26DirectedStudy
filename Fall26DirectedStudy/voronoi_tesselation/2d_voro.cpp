@@ -45,14 +45,14 @@ void draw_centroids(const char *filename, voro::container_2d &con)
 /**
  * Runs Lloyd's algorithm and outputs a series of files into output/lloyd
  */
-void animate_Lloyd(voro::container_2d &con, int iterations)
+void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
 {
     std::string filename = "output/lloyd/cellset" + std::to_string(0) + ".gnu";
     con.draw_cells_gnuplot(filename.c_str());
 
     // Initialize the current and next containers
-    voro::container_2d con_curr(0,10, 0,10, 10,10, false, false, 100);
-    voro::container_2d con_next(0,10, 0,10, 10,10, false, false, 100);
+    voro::container_2d con_curr(0,10, 0,10, 10,10, false, false, num_seeds);
+    voro::container_2d con_next(0,10, 0,10, 10,10, false, false, num_seeds);
 
     // Insert points from con into con_curr
     for(auto cli = con.begin(); cli < con.end(); cli++) {
@@ -102,7 +102,7 @@ void animate_Lloyd(voro::container_2d &con, int iterations)
 
 int main() 
 {
-    int N = 100;
+    int N = 200;
     int lloyd_iterations = 30;
 
     // Initialize the container class to be the unit square, with
@@ -125,7 +125,7 @@ int main()
     // Output for the centroid of each cell
     draw_centroids("output/centroids.txt", con);
     // Output for Lloyd's algo
-    animate_Lloyd(con, lloyd_iterations);
+    animate_Lloyd(con, N, lloyd_iterations);
 
 
 
