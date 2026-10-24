@@ -47,8 +47,10 @@ void draw_centroids(const char *filename, voro::container_2d &con)
  */
 void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
 {
+    // Sort seeds by ID
+
     std::string filename = "output/lloyd/cellset" + std::to_string(0) + ".gnu";
-    con.draw_cells_gnuplot(filename.c_str());
+    con.print_custom("%i %x %y %.8P", filename.c_str());
 
     // Initialize the current and next containers
     voro::container_2d con_curr(0,10, 0,10, 10,10, false, false, num_seeds);
@@ -67,7 +69,7 @@ void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
         // Initialize a cell with the geometry of the current container
         voro::voronoicell_2d c(con_curr);
 
-        // Iterate through every particle in the current container
+        // Iterate through every particle storing their locations and IDs
         for(auto cli = con_curr.begin(); cli < con_curr.end(); cli++) {
             if(con_curr.compute_cell(c, cli)) {
                 double xc, yc;
@@ -79,14 +81,14 @@ void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
                 double X = xp + xc;
                 double Y = yp + yc;
 
-                int pid = con_next.pid(cli);
+                int pid = con_curr.pid(cli);
                 
                 con_next.put(pid, X, Y);
             }
         }
 
         filename = "output/lloyd/cellset" + std::to_string(i+1) + ".gnu";
-        con_next.draw_cells_gnuplot(filename.c_str());
+        con_next.print_custom("%i %x %y %.8P", filename.c_str());
         
         // Empty the current container and place the next container's seeds inside
         con_curr.clear();
@@ -102,7 +104,7 @@ void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
 
 int main() 
 {
-    int N = 200;
+    int N = 100;
     int lloyd_iterations = 30;
 
     // Initialize the container class to be the unit square, with
@@ -126,9 +128,6 @@ int main()
     draw_centroids("output/centroids.txt", con);
     // Output for Lloyd's algo
     animate_Lloyd(con, N, lloyd_iterations);
-
-
-
 
     return 0;
 }
