@@ -11,7 +11,7 @@ using namespace std;
 
 float randomFloat()
 {
-    return (float)(rand()) / (float)(RAND_MAX);
+    return 1.0*rand() / RAND_MAX;
 }
 
 vector<int> createRandomVec(int min, int max, int size, int seed)

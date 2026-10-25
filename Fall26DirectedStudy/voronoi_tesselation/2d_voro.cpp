@@ -12,8 +12,6 @@
  */
 void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
 {
-    // Sort seeds by ID
-
     std::string filename = "output/lloyd/cellset" + std::to_string(0) + ".gnu";
     con.print_custom("%i %x %y %.8P", filename.c_str());
 
@@ -71,6 +69,7 @@ int main()
 {
     int N = 100;
     int lloyd_iterations = 30;
+    std::vector<int> states(N);
 
     // Initialize the container class to be the unit square, with
 	// non-periodic boundary conditions. Divide it into a 10 by 10 grid,
@@ -82,6 +81,7 @@ int main()
         double x = 10.0*rand()/RAND_MAX;
         double y = 10.0*rand()/RAND_MAX;
         con.put(i, x, y);
+        states[i] = rand() % 2;
     }
 
     // Output for the domain and V-cells in gnuplot format
