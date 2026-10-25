@@ -8,41 +8,6 @@
 // g++ 2d_voro.cpp -lvoro++ -fopenmp -w -o 2d_voro
 
 /**
- * Computes centroids of V-cells in the container con and outputs a text file that include the V-cells' IDs.
- */
-void draw_centroids(const char *filename, voro::container_2d &con)
-{
-    std::ofstream file;
-    file.open(filename);
-
-    // Iterator
-    voro::container_2d::iterator cli;
-
-    // Voronoi cell object
-    voro::voronoicell_2d c(con);
-
-    for(cli = con.begin(); cli < con.end(); cli++) {
-        if(con.compute_cell(c, cli)) {
-            double xc, yc;
-            c.centroid(xc, yc);   // local centroid
-
-            double xp;   // particle x
-            double yp;   // particle y
-            con.pos(cli, xp, yp);
-
-            double X = xp + xc;        // global centroid
-            double Y = yp + yc;
-
-            int pid = con.pid(cli);
-
-            file << pid << " " << X << " " << Y << " ";
-        }
-    }
-
-    file.close();
-}
-
-/**
  * Runs Lloyd's algorithm and outputs a series of files into output/lloyd
  */
 void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
@@ -119,13 +84,13 @@ int main()
         con.put(i, x, y);
     }
 
-    // Output the particle positions to a file
-	con.draw_particles("output/seeds.par");
     // Output for the domain and V-cells in gnuplot format
-    // con.draw_domain_gnuplot("output/domain.gnu");
+    con.draw_domain_gnuplot("output/domain.gnu");
     con.draw_cells_gnuplot("output/cells.gnu");
     // Output for the centroid of each cell
-    draw_centroids("output/centroids.txt", con);
+    con.print_custom("%i %C", "output/centroids.txt");
+    // Output for the cell IDs, seed locations, and vertices of each cell
+    con.print_custom("%i %x %y %.8P", "output/cellID_loc_vert.txt");
     // Output for Lloyd's algo
     animate_Lloyd(con, N, lloyd_iterations);
 
