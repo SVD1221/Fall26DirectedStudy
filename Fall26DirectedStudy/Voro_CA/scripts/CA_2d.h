@@ -3,6 +3,7 @@
 #define CA_2D_H
 
 // Package inclusions
+#include "/usr/local/include/voro++/voro++.hh"
 #include <vector>
 #include <fstream>
 
@@ -16,34 +17,27 @@ void writeTo(ofstream *file, vector<int> *vec);
 
 vector<int> createAdjustments(bool top, bool bottom, bool left, bool right, int x, int y, vector<int> shape);
 
-void convolve2D(vector<int> *pConvolent, vector<int> data, vector<int> shape, vector<int> kernel, vector<int> k_shape);
-
 struct Rule
 {
-    vector<vector<float>> stateRules;
-    vector<int> neighborhood;
-    int neighWidth;
-    int neighHeight;
+    vector<vector<vector<float>>> stateRules;
 
-    Rule(vector<vector<float>> stateRules, vector<int> neighborhood, int neighWidth, int neighHeight);
+    Rule(vector<vector<vector<float>>> stateRules);
 }; 
 
 class CASystem
 {
     private:
-        vector<int> shape;
-        vector<int> kernel;
-        vector<int> kernel_shape;
+        int num_seeds;
+        bool include_boundary;
         Rule rule;
+        voro::container_2d &voro_cells;
 
     public:
-        CASystem(vector<int> shape, Rule rule);
+        CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary);
         
-        vector<int> applyCA(vector<int> state);
+        vector<int> applyCA(vector<int> &state);
 
-        vector<int> countNeighbors(vector<int> state);
-
-        vector<int> getShape();
+        int getNumSeeds();
 };
 
 void print_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, string filename);
