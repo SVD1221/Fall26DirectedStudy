@@ -15,7 +15,7 @@ int main()
 {
     // Create a Voronoi container in a 10x10 domain
     std::vector<int> domain_size = {10, 10};
-    int num_seeds = 200;
+    int num_seeds = 50;
     int random_seed = 12;
     // int random_seed = time(0);
 
