@@ -211,18 +211,18 @@ int main()
     int rule_max = 3;
     Rule rule({
         // state = 1 (i.e. the first type of mobile state)
-        {2, -1, 1, 2, 3},
+        {2, -1, 1, 1, 1},
         // state = 2 (i.e. the second type of mobile state)
-        {-2, 1, 2, 2, 3},
+        {-2, 1, 2, 2, 2},
         // state = 2 (i.e. the third type of mobile state)
         {2, 1, 3, 3, 3}
     }, rule_min, rule_max);
 
-    vector<vector<int>> cells = createRandom2DPoints(num_particles, grid_shape[0], grid_shape[1], 12);
-    vector<int> initial_state = assignRandomValues(cells, 10, grid_shape[0], grid_shape[1], 12, 
+    vector<vector<int>> particles = createRandom2DPoints(num_particles, grid_shape[0], grid_shape[1], 12);
+    vector<int> initial_state = assignRandomValues(particles, 10, grid_shape[0], grid_shape[1], 12, 
                                                     rule_min, rule_max, true, 3);
 
-    DLASystem dla = DLASystem(rule, cells, grid_shape);
+    DLASystem dla = DLASystem(rule, particles, grid_shape);
 
     // Write to file
     ofstream file;
