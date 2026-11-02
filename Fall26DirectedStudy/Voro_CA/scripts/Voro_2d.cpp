@@ -6,14 +6,38 @@
 
 using namespace voro;
 
+void run_Lloyd(container_2d &con_curr, container_2d &con_next)
+{
+    // Initialize a cell with the geometry of the current container
+    voronoicell_2d c(con_curr);
+
+    // Iterate through every particle storing their locations and IDs
+    for(auto cli = con_curr.begin(); cli < con_curr.end(); cli++) {
+        if(con_curr.compute_cell(c, cli)) {
+            double xc, yc;
+            c.centroid(xc, yc);
+
+            double xp, yp;
+            con_curr.pos(cli, xp, yp);
+
+            double X = xp + xc;
+            double Y = yp + yc;
+
+            int pid = con_curr.pid(cli);
+            
+            con_next.put(pid, X, Y);
+        }
+    }
+}
+
 void print_Lloyd_Evolution(container_2d &con, int num_seeds, int iterations)
 {
     std::string filename = "output/lloyd/cellset" + std::to_string(0) + ".gnu";
     con.print_custom("%i %x %y %.8P", filename.c_str());
 
     // Initialize the current and next containers
-    voro::container_2d con_curr(0,10, 0,10, 10,10, false, false, num_seeds);
-    voro::container_2d con_next(0,10, 0,10, 10,10, false, false, num_seeds);
+    container_2d con_curr(0,10, 0,10, 10,10, false, false, num_seeds);
+    container_2d con_next(0,10, 0,10, 10,10, false, false, num_seeds);
 
     // Insert points from con into con_curr
     for(auto cli = con.begin(); cli < con.end(); cli++) {
@@ -25,26 +49,7 @@ void print_Lloyd_Evolution(container_2d &con, int num_seeds, int iterations)
     // Initiate Lloyd's Algo
     for(int i = 0; i < iterations; i++) {
 
-        // Initialize a cell with the geometry of the current container
-        voro::voronoicell_2d c(con_curr);
-
-        // Iterate through every particle storing their locations and IDs
-        for(auto cli = con_curr.begin(); cli < con_curr.end(); cli++) {
-            if(con_curr.compute_cell(c, cli)) {
-                double xc, yc;
-                c.centroid(xc, yc);
-
-                double xp, yp;
-                con_curr.pos(cli, xp, yp);
-
-                double X = xp + xc;
-                double Y = yp + yc;
-
-                int pid = con_curr.pid(cli);
-                
-                con_next.put(pid, X, Y);
-            }
-        }
+        run_Lloyd(con_curr, con_next);
 
         filename = "output/lloyd/cellset" + std::to_string(i+1) + ".gnu";
         con_next.print_custom("%i %x %y %.8P", filename.c_str());

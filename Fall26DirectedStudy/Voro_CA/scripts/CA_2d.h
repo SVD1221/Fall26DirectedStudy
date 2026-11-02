@@ -3,6 +3,7 @@
 #define CA_2D_H
 
 // Package inclusions
+#include "Voro_2d.h"
 #include "/usr/local/include/voro++/voro++.hh"
 #include <vector>
 #include <fstream>
@@ -14,8 +15,6 @@ using namespace std;
 vector<int> createRandomVec(int min, int max, int size, int seed);
 
 void writeTo(ofstream *file, vector<int> *vec);
-
-vector<int> createAdjustments(bool top, bool bottom, bool left, bool right, int x, int y, vector<int> shape);
 
 struct Rule
 {
@@ -34,6 +33,10 @@ class CASystem
 
     public:
         CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary);
+
+        voro::container_2d getCells();
+
+        void updateCells(voro::container_2d &new_voro_cells);
         
         vector<int> applyCA(vector<int> &state);
 
@@ -41,5 +44,7 @@ class CASystem
 };
 
 void print_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, string filename);
+
+void print_Dynamic_Voro_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, int ca_cycle, int lloyd_cycle, int random_seed);
 
 #endif // CA_2D_H

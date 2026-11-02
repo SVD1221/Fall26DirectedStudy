@@ -10,6 +10,9 @@
 using namespace voro;
 
 // Declare functions, classes, or variables
+
+void run_Lloyd(container_2d &con_curr, container_2d &con_next);
+
 void print_Lloyd_Evolution(container_2d &con, int num_seeds, int iterations);
 
 container_2d create_Voro_Container(vector<int> domain_size, int num_seeds);
