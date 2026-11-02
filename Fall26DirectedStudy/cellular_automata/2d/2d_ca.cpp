@@ -104,7 +104,7 @@ struct Rule
     int neighHeight;
 };               
                         
-class CASystem
+class DLASystem
 {
     private:
         vector<int> shape;
@@ -113,7 +113,7 @@ class CASystem
         Rule rule;
 
     public:
-        CASystem(vector<int> shape, Rule rule)
+        DLASystem(vector<int> shape, Rule rule)
         : shape(shape), rule(rule), kernel(rule.neighborhood), kernel_shape({rule.neighHeight, rule.neighWidth})
         {}
         
@@ -286,7 +286,7 @@ int main()
     int iterations = 100;
     vector<int> grid_shape = {200, 200}; //{height, width}
     vector<int> initial_state = createRandomVec(0, 1, grid_shape[0]*grid_shape[1], 1);
-    CASystem ca = CASystem(grid_shape, GoL);
+    DLASystem ca = DLASystem(grid_shape, GoL);
     // CASystem ca = CASystem(grid_shape, ForestFire);
 
     //// Writes to file (grid_shape \\newline data)
