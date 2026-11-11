@@ -74,25 +74,33 @@ int main()
     // Initialize the container class to be the unit square, with
 	// non-periodic boundary conditions. Divide it into a 10 by 10 grid,
 	// with an initial memory allocation of N particles per grid square.
-	voro::container_2d con(0,10, 0,10, 10,10, false, false, N);
+	// voro::container_2d con(0,10, 0,10, 10,10, false, false, N);
+	voro::container_2d con(0,4.74, 0,3.11, 5,5, false, false, 5);
 
     // Add a few random points
-    for(int i=0; i<N; i++) {
-        double x = 10.0*rand()/RAND_MAX;
-        double y = 10.0*rand()/RAND_MAX;
-        con.put(i, x, y);
-        states[i] = rand() % 2;
+    // for(int i=0; i<N; i++) {
+    //     double x = 10.0*rand()/RAND_MAX;
+    //     double y = 10.0*rand()/RAND_MAX;
+    //     con.put(i, x, y);
+    //     states[i] = rand() % 2;
+    // }
+
+    vector<int> tec_x = {100,300,250,375,150};
+    vector<int> tec_y = {100,75,175,225,200};
+
+    for(int i=0; i<tec_x.size(); i++) {
+        con.put(i, tec_x[i]/100., tec_y[i]/100.);
     }
 
-    // Output for the domain and V-cells in gnuplot format
+    // // Output for the domain and V-cells in gnuplot format
     con.draw_domain_gnuplot("output/domain.gnu");
     con.draw_cells_gnuplot("output/cells.gnu");
-    // Output for the centroid of each cell
-    con.print_custom("%i %C", "output/centroids.txt");
-    // Output for the cell IDs, seed locations, and vertices of each cell
-    con.print_custom("%i %x %y %.8P", "output/cellID_loc_vert.txt");
-    // Output for Lloyd's algo
-    animate_Lloyd(con, N, lloyd_iterations);
+    // // Output for the centroid of each cell
+    // con.print_custom("%i %C", "output/centroids.txt");
+    // // Output for the cell IDs, seed locations, and vertices of each cell
+    // con.print_custom("%i %x %y %.8P", "output/cellID_loc_vert.txt");
+    // // Output for Lloyd's algo
+    // animate_Lloyd(con, N, lloyd_iterations);
 
     return 0;
 }
