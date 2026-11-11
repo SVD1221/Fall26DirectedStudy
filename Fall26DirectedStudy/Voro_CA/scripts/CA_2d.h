@@ -28,11 +28,12 @@ class CASystem
     private:
         int num_seeds;
         bool include_boundary;
+        int boundary_state;
         Rule rule;
         voro::container_2d &voro_cells;
 
     public:
-        CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary);
+        CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary, int boundary_state);
 
         voro::container_2d getCells();
 

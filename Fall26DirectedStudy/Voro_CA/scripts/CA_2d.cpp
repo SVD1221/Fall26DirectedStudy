@@ -33,8 +33,8 @@ void writeTo(ofstream *file, vector<int> *vec)
 
 Rule::Rule(vector<vector<vector<float>>> stateRules) : stateRules(stateRules) {}
 
-CASystem::CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary)
-        : rule(rule), voro_cells(voro_cells), num_seeds(num_seeds), include_boundary(include_boundary) {}
+CASystem::CASystem(Rule rule, voro::container_2d &voro_cells, int num_seeds, bool include_boundary, int boundary_state)
+        : rule(rule), voro_cells(voro_cells), num_seeds(num_seeds), include_boundary(include_boundary), boundary_state(boundary_state) {}
 
 voro::container_2d CASystem::getCells()
 {
@@ -81,6 +81,7 @@ vector<int> CASystem::applyCA(vector<int> &state)
                 }
             }
             if (include_boundary){
+                M += boundary_state*(neighbor_ids.size() - n);
                 n = neighbor_ids.size();
             }
             int N = clamp(n - 5, 0, 2);
@@ -139,7 +140,7 @@ void print_Dynamic_Voro_CA_Evolution(vector<int> initial_state, CASystem ca, int
 
         filename = "output/dynamic_Voro_CA/cellset" + std::to_string(i+1) + ".gnu";
         if (i % lloyd_cycle == lloyd_cycle-1){
-            run_Lloyd(con_curr, con_next);                                                  // update con_next
+            voro::container_2d con_next = run_Lloyd(con_curr, ca.getNumSeeds(), 1);                                                  // update con_next
             con_next.print_custom("%i %x %y %.8P", filename.c_str());                       // print con_next
             ca.updateCells(con_next);                                                       // update con_curr to con_next and clear con_next
         }

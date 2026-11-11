@@ -12,6 +12,9 @@ int main()
 {
     // Create a Voronoi container in a 10x10 domain
     std::vector<int> domain_size = {10, 10};
+    bool periodic = false;
+    bool boundary_is_neighbor = false;
+    int boundary_state = 0;
     int num_seeds = 250;
     int random_seed = 12;
     // int random_seed = time(0);
@@ -19,9 +22,9 @@ int main()
     // define cycle lengths
     int ca_cycle = 1;
     int lloyd_cycle = 2;
-    int iterations = 54;
+    int iterations = 50;
 
-    voro::container_2d con = create_Voro_Container(domain_size, num_seeds);
+    voro::container_2d con = create_Voro_Container(domain_size, num_seeds, periodic);
     vector<int> states(num_seeds, 0);
 
     // Add random points
@@ -49,16 +52,17 @@ int main()
         }
     });
 
-    CASystem ca(rule, con, num_seeds, true);
-
     vector<int> initial_state = createRandomVec(0, 1, num_seeds, random_seed);
 
     // Create a dynamic Voro CA under Lloyd's Algo
+    CASystem ca(rule, con, num_seeds, boundary_is_neighbor, boundary_state);
     print_Dynamic_Voro_CA_Evolution(initial_state, ca, iterations, ca_cycle, lloyd_cycle, random_seed);
 
     // Create a static Voro CA
-    // print_CA_Evolution(initial_state, ca, 25, "output/Voro_CA_evolution.txt");
-    // print_Voro_Cells(con, "output/cellID_loc_vert.txt");
+    // voro::container_2d final_con = run_Lloyd(con, num_seeds, 20);
+    // CASystem ca(rule, final_con, num_seeds, boundary_is_neighbor, boundary_state);
+    // print_CA_Evolution(initial_state, ca, 25, "output/static_Voro_CA/ca_evolution.txt");
+    // print_Voro_Cells(final_con, "output/static_Voro_CA/voro_seeds.txt");
 
     // Run Lloyd's algorithm and output the animation
     // int lloyd_iterations = 30;

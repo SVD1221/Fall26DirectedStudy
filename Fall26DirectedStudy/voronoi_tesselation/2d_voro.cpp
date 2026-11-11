@@ -68,6 +68,8 @@ void animate_Lloyd(voro::container_2d &con, int num_seeds, int iterations)
 int main() 
 {
     int N = 100;
+    int width = 10;
+    int height = 10;
     int lloyd_iterations = 30;
     std::vector<int> states(N);
 

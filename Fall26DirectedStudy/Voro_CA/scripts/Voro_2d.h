@@ -11,11 +11,11 @@ using namespace voro;
 
 // Declare functions, classes, or variables
 
-void run_Lloyd(container_2d &con_curr, container_2d &con_next);
+container_2d run_Lloyd(container_2d &con_curr, int num_seeds, int iterations);
 
 void print_Lloyd_Evolution(container_2d &con, int num_seeds, int iterations);
 
-container_2d create_Voro_Container(vector<int> domain_size, int num_seeds);
+container_2d create_Voro_Container(vector<int> domain_size, int num_seeds, bool periodic);
 
 void print_Voro_Cells(container_2d &con, string filename);
 
