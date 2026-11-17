@@ -104,7 +104,7 @@ struct Rule
     int neighHeight;
 };               
                         
-class DLASystem
+class CASystem
 {
     private:
         vector<int> shape;
@@ -113,7 +113,7 @@ class DLASystem
         Rule rule;
 
     public:
-        DLASystem(vector<int> shape, Rule rule)
+        CASystem(vector<int> shape, Rule rule)
         : shape(shape), rule(rule), kernel(rule.neighborhood), kernel_shape({rule.neighHeight, rule.neighWidth})
         {}
         
@@ -236,7 +236,7 @@ const Rule GoL = {  {   {0, 0, 0, 1, 0, 0, 0, 0, 0},
                         1, 1, 1   },
                     3, 3};
 
-const Rule NeumannGoL = {   {   {0, 0, 1, 0, 0},
+const Rule Neumann = {      {   {0, 0, 1, 0, 0},
                                 {0, 0, 1, 1, 0} },
                             {   1, 
                                 1   },
@@ -283,10 +283,37 @@ const Rule ForestFire = {   {   {-1, 0.001, 0.00001, 0, 0.05, 0},
 
 int main()
 {
-    int iterations = 100;
-    vector<int> grid_shape = {200, 200}; //{height, width}
-    vector<int> initial_state = createRandomVec(0, 1, grid_shape[0]*grid_shape[1], 1);
-    DLASystem ca = DLASystem(grid_shape, GoL);
+    int iterations = 199;
+    vector<int> grid_shape = {75, 75}; //{height, width}
+    vector<int> initial_state = createRandomVec(0, 1, grid_shape[0]*grid_shape[1], 2);
+
+    //// Glider: interation = 4*grid_shape[1] - 1 to loop animation
+    // vector<int> glider(grid_shape[0]*grid_shape[1]);
+    // glider[(grid_shape[0]-1)*grid_shape[1] + 2] = 1;
+    // glider[(grid_shape[0]-2)*grid_shape[1] + 2] = 1;
+    // glider[(grid_shape[0]-2)*grid_shape[1] + 0] = 1;
+    // glider[(grid_shape[0]-3)*grid_shape[1] + 2] = 1;
+    // glider[(grid_shape[0]-3)*grid_shape[1] + 1] = 1;
+
+    // Period 5 Oscillator
+    // int x = (grid_shape[1]-1)/2;
+    // int y = (grid_shape[0]-1)/2;
+    // vector<int> oscillator(grid_shape[0]*grid_shape[1], 0);
+    // vector<vector<int>> oscillator_coords = {
+    //     {x, y}, {x, y+1}, {x+1, y}, {x+1, y+1}, {x-1, y}, {x-1, y+1},
+    //     {x, y-2}, {x, y-3}, {x, y-4}, {x, y-5},
+    //     {x-1, y-2}, {x+1, y-2}, {x-1, y-5}, {x+1, y-5},
+    //     {x, y+3}, {x, y+4}, {x, y+5}, {x, y+6},
+    //     {x-1, y+3}, {x+1, y+3}, {x-1, y+6}, {x+1, y+6},
+    // };
+    // // Set alive cells in the 1D vector
+    // for (vector<int> coord : oscillator_coords) {
+    //     int r = coord[0];
+    //     int c = coord[1];
+    //     oscillator[c * grid_shape[1] + r] = 1;
+    // }
+
+    CASystem ca = CASystem(grid_shape, Neumann);
     // CASystem ca = CASystem(grid_shape, ForestFire);
 
     //// Writes to file (grid_shape \\newline data)
@@ -295,6 +322,13 @@ int main()
     // file.open("../output_files/Game_of_Life/my_GoL_output.txt");
     file << grid_shape[0] << " " << grid_shape[1] << endl;
     vector<int> curr_state = initial_state;
+
+    // for (int i = 0; i < grid_shape[0]; i++){
+    //     for (int j = 0; j < grid_shape[1]; j++){
+    //         cout << curr_state[i * grid_shape[1] + j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 
     for (int i = 0; i < iterations; i++){
         writeTo(&file, &curr_state);

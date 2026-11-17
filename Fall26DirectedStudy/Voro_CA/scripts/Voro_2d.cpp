@@ -62,7 +62,7 @@ void print_Lloyd_Evolution(container_2d &con, int num_seeds, int iterations)
     std::string filename = "output/lloyd/cellset" + std::to_string(0) + ".gnu";
     con.print_custom("%i %x %y %.8P", filename.c_str());
 
-    // Initialize the current and next containers
+    // Initialize the current
     std::vector<int> domain = {con.bx, con.by};
     bool periodic = con.x_prd;
     

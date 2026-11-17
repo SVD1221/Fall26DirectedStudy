@@ -1,5 +1,4 @@
 //elementary cellular automata
-// - convolutions for rules
 
 #include <iostream>
 #include <fstream>
@@ -92,12 +91,12 @@ void writeTo(ofstream *file, vector<int> *vec)
 int main()
 {
     ofstream file;
-    file.open("output_files/eca_output.txt");
+    file.open("../output_files/1d/eca_output.txt");
 
     int iterations = 30;
     vector<int> kernel = {4, 2, 1};
     vector<int> initial_state = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    vector<int> RULES = {37, 42, 53, 67, 81, 105, 149};
+    vector<int> RULES = {37, 42, 53, 67, 81, 105, 149, 225, 230};
 
     file << initial_state.size() << endl;
     writeTo(&file, &RULES);

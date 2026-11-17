@@ -31,8 +31,8 @@ void writeTo(std::ofstream *file, std::vector<std::vector<int>> *mat)
 }
 //
 
-const int WIDTH = 200;
-const int HEIGHT = 200;
+const int WIDTH = 20;
+const int HEIGHT = 20;
 
 void printGrid(const std::vector<std::vector<int>>& grid) {
     for (const auto& row : grid) {
@@ -98,7 +98,7 @@ int main() {
         }
     }
     std::ofstream file;
-    file.open("../../output_files/Game_of_Life/benchmark_GoL_output.txt");
+    file.open("../output_files/Game_of_Life/benchmark_GoL_output.txt");
     file << HEIGHT << " " << WIDTH << std::endl;
     for (int i = 0; i < iterations; i++){
         writeTo(&file, &grid);

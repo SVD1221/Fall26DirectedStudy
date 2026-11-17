@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include <cstdio>
 #include <cmath>
 
 #include <unordered_set>
@@ -90,7 +89,7 @@ vector<int> assignRandomValues(vector<vector<int>> points, int num_fixed, int wi
  *        e.g. _|_-1_|_1_|_2_|                  e.g. _|_-1_|_1_|
  *             1|_-1_|_1_|_2_|                       1|_-1_|_1_|
  *             2|_-1_|_2_|_2_|
- *        (Two-mobile cell example)             (Standard DLA example)
+ *        (Two-mobile cell example)                 (Standard DLA)
  */
 struct Rule
 {
@@ -214,7 +213,7 @@ int main()
         {2, -1, 1, 1, 1},
         // state = 2 (i.e. the second type of mobile state)
         {-2, 1, 2, 2, 2},
-        // state = 2 (i.e. the third type of mobile state)
+        // state = 3 (i.e. the third type of mobile state)
         {2, 1, 3, 3, 3}
     }, rule_min, rule_max);
 

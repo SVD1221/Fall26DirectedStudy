@@ -46,6 +46,40 @@ class CASystem
 
 void print_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, string filename);
 
-void print_Dynamic_Voro_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, int ca_cycle, int lloyd_cycle, int random_seed);
+void print_Dynamic_Voro_CA_Evolution(vector<int> initial_state, CASystem ca, int iterations, int ca_cycle, int lloyd_cycle, int random_seed, string folder);
+
+struct DLARule
+{
+    vector<vector<float>> stateRules;
+    int min;
+    int max;
+
+    DLARule(vector<vector<float>> stateRules, int min, int max);
+};
+
+class DLASystem
+{
+    private:
+        DLARule rule;
+        voro::container_2d &voro_cells;
+        int num_seeds;
+
+    public:
+        DLASystem(DLARule rule, voro::container_2d &voro_cells, int num_seeds);
+
+        vector<int> getValueRange();
+
+        voro::container_2d getCells();
+
+        void updateCells(voro::container_2d &new_voro_cells);
+
+        vector<int> applyCA(vector<int> &state);
+
+        int getNumSeeds();
+};
+
+void print_DLA_Evolution(vector<int> initial_state, DLASystem dla, int iterations, string filename);
+
+void print_Dynamic_DLA_Voro_CA_Evolution(vector<int> initial_state, DLASystem dla, int iterations, int ca_cycle, int lloyd_cycle, int random_seed, string folder);
 
 #endif // CA_2D_H

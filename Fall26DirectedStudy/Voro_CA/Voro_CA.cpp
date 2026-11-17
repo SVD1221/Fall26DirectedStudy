@@ -3,21 +3,24 @@
 
 #include "/usr/local/include/voro++/voro++.hh"
 
-#include <ctime>
 #include <iostream>
 
 // g++ Voro_CA.cpp scripts/*.cpp -o Voro_CA -lvoro++ -fopenmp -w
 
 int main()
 {
+    // Pick a channel for data from dynamic voro ca's to be stored
+    int channel = 4;
+
     // Create a Voronoi container in a 10x10 domain
     std::vector<int> domain_size = {10, 10};
-    bool periodic = false;
+    bool periodic = true;
     bool boundary_is_neighbor = false;
     int boundary_state = 0;
     int num_seeds = 250;
-    int random_seed = 12;
+    int random_seed = 1794769999;
     // int random_seed = time(0);
+    // std::cout<< "random seed: " << random_seed << endl;
 
     // define cycle lengths
     int ca_cycle = 1;
@@ -54,15 +57,20 @@ int main()
 
     vector<int> initial_state = createRandomVec(0, 1, num_seeds, random_seed);
 
-    // Create a dynamic Voro CA under Lloyd's Algo
-    CASystem ca(rule, con, num_seeds, boundary_is_neighbor, boundary_state);
-    print_Dynamic_Voro_CA_Evolution(initial_state, ca, iterations, ca_cycle, lloyd_cycle, random_seed);
+    // Dynamic Voro CA under Lloyd's Algo
+    // CASystem ca(rule, con, num_seeds, boundary_is_neighbor, boundary_state);
+    // print_Dynamic_Voro_CA_Evolution(initial_state, ca, iterations, ca_cycle, lloyd_cycle, random_seed, "output/dynamic_Voro_CA/channel"+std::to_string(channel));
 
-    // Create a static Voro CA
-    // voro::container_2d final_con = run_Lloyd(con, num_seeds, 20);
-    // CASystem ca(rule, final_con, num_seeds, boundary_is_neighbor, boundary_state);
-    // print_CA_Evolution(initial_state, ca, 25, "output/static_Voro_CA/ca_evolution.txt");
-    // print_Voro_Cells(final_con, "output/static_Voro_CA/voro_seeds.txt");
+    // Static Voro CA with Lloyd iterations
+    voro::container_2d final_con = run_Lloyd(con, num_seeds, 30);
+    CASystem ca(rule, final_con, num_seeds, boundary_is_neighbor, boundary_state);
+    print_CA_Evolution(initial_state, ca, iterations, "output/static_Voro_CA/ca_evolution.txt");
+    print_Voro_Cells(final_con, "output/static_Voro_CA/voro_seeds.txt");
+
+    // // Static Voro CA with random seeds
+    // CASystem ca(rule, con, num_seeds, boundary_is_neighbor, boundary_state);
+    // print_CA_Evolution(initial_state, ca, iterations, "output/static_Voro_CA/ca_evolution.txt");
+    // print_Voro_Cells(con, "output/static_Voro_CA/voro_seeds.txt");
 
     // Run Lloyd's algorithm and output the animation
     // int lloyd_iterations = 30;
